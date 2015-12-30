@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
+		function sendCoordinates() {
+			var query ="?latitude=";
+			var lat, longi;
+			lat = $("#latitude").val();
+			longi = $("#longitude").val();
+			query += lat + "&longitude=" + longi;
+			console.log(query);
+			sendCoordinatesToServer(lat,longi,query);
+		}
+		function sendCoordinatesToServer(latitude, longitude, query){
+			$.ajax({
+		        url: "http://127.0.0.1:5000/sendCoordinates" + query,
+		        data: {},
+		        type: "GET",
+		        crossDomain: true,
+		        dataType: "jsonp",
+		        success: function(data) {
+		            if (data.status == 'success') {
+		            	$('#serverresponse').html("The server has recieved the coordinates");
+		                console.log("success");
+		            } else {
+		                console.log("failure");
+		            }
+		        }
+			});
+		}
+		function populateTable(){
+			$.ajax({
+				url: "http://127.0.0.1:5000/table",
+				data: {},
+				type: "GET",
+				crossDomain: true,
+				dataType: "jsonp",
+		        success: function(data) {
+		            var $data = $('<div>');
+		            var numitems = 0;
+		            $.each(data.data, function(i, item) {
+		                numitems++;
+		                var $tr = $('<tr>').append(
+		                    $('<td>').text(item.latitude),
+		                    $('<td>').text(item.longitude)
+		                );
+		                $data.append($tr);
+		            });
+		            if (numitems == 0)
+		                $data.append($.parseHTML('<tr><td>There are no tutors at this time.</td><td/><td/></tr>'));
+		            $('#').html($data.html());
+		        },
+			})
+		}
+	</script>
+</head>
+<body>
+	Hello, David!
+
+<div id="serverresponse">Request has not been made</span></div>
+
+<form action="#">
+	Longitude:<br>
+	<input type="text" id="longitude"><br>
+	Latitude:<br>
+	<input type="text" id="latitude"><br>
+	<input type="submit" id="submit" value="Submit button" href="#">
+</form>
+
+<form action="#">
+	<input type="submit" id="popTable" value="Populate the table">
+</form>
+
+<div id="latlongTable">
+	<span>YOYOYO </span>
+</div>
+
+<script>
+    $(document).ready(function(){
+    	$("#latlongTable").hide();
+    	$("#submit").click(function(e) {
+        	sendCoordinates();
+    	});
+    	$("#popTable").click(function(e){
+    		$("#latlongTable").show();
+    	});
+    });
+</script>
+
+</body>
+</html>
