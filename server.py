@@ -59,9 +59,12 @@ def sendCoordinates():
 
 @app.route("/table")
 def populateTable():
+	print "Hello"
 	tableList = []
 	for i in coordinateDict:
 		tableList.append({i[0] : i[1]})
+	print tableList
+	print returnListData(tableList)
 	return returnListData(tableList)
 
 		

@@ -37,19 +37,19 @@
 				crossDomain: true,
 				dataType: "jsonp",
 		        success: function(data) {
+		        	console.log("HERE");
 		            var $data = $('<div>');
 		            var numitems = 0;
-		            $.each(data.data, function(i, item) {
+		            $.each(data.data, function(index, item) {
 		                numitems++;
-		                var $tr = $('<tr>').append(
-		                    $('<td>').text(item.latitude),
-		                    $('<td>').text(item.longitude)
-		                );
+		                console.log(item);
+		                var $tr = $('<tr>').append('<td>' + JSON.stringify(item) + '<td>');
+		                console.log($tr)
 		                $data.append($tr);
 		            });
 		            if (numitems == 0)
-		                $data.append($.parseHTML('<tr><td>There are no tutors at this time.</td><td/><td/></tr>'));
-		            $('#').html($data.html());
+		                $data.append($.parseHTML('<tr><td>No coordinates just yet</td></tr>'));
+		            $('#coordinateTable').html($data.html());
 		        },
 			})
 		}
@@ -73,7 +73,7 @@
 </form>
 
 <div id="latlongTable">
-	<span>YOYOYO </span>
+	<span id="coordinateTable">YOYOYO </span>
 </div>
 
 <script>
@@ -84,6 +84,7 @@
     	});
     	$("#popTable").click(function(e){
     		$("#latlongTable").show();
+    		populateTable();
     	});
     });
 </script>
