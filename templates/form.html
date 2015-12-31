@@ -1,8 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style type="text/css">
+    html, body { height: 100%; margin: 0; padding: 0; }
+    #map { height: 100%;}
+    .leftColumn{ width: 250px; padding-left:50px; float: left;}
+  </style>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+  <!-- This script section will be handle the AJAX requests sent to the server for storage -->
 	<script>
+    // grabs the text values from the divs
 		function sendCoordinates() {
 			var query ="?latitude=";
 			var lat, longi;
@@ -12,6 +20,7 @@
 			console.log(query);
 			sendCoordinatesToServer(lat,longi,query);
 		}
+    // sends ajax call to server, 127.0.0.1:5000 local for now
 		function sendCoordinatesToServer(latitude, longitude, query){
 			$.ajax({
 		        url: "http://127.0.0.1:5000/sendCoordinates" + query,
@@ -29,6 +38,7 @@
 		        }
 			});
 		}
+    // populates the table of coordinates stored on the server
 		function populateTable(){
 			$.ajax({
 				url: "http://127.0.0.1:5000/table",
@@ -56,27 +66,30 @@
 	</script>
 </head>
 <body>
-	Hello, David!
+<div class="leftColumn">
+    Hello, David!
 
-<div id="serverresponse">Request has not been made</span></div>
+  <div id="serverresponse">Request has not been made</span></div>
+  <form action="#">
+  	Longitude:<br>
+  	<input type="text" id="longitude"><br>
+  	Latitude:<br>
+  	<input type="text" id="latitude"><br>
+  	<input type="submit" id="submit" value="Submit button" href="#">
+  </form>
 
-<form action="#">
-	Longitude:<br>
-	<input type="text" id="longitude"><br>
-	Latitude:<br>
-	<input type="text" id="latitude"><br>
-	<input type="submit" id="submit" value="Submit button" href="#">
-</form>
+  <form action="#">
+  	<input type="submit" id="popTable" value="Populate the table">
+  </form>
 
-<form action="#">
-	<input type="submit" id="popTable" value="Populate the table">
-</form>
-
-<div id="latlongTable">
-	<span id="coordinateTable">YOYOYO </span>
+  <div id="latlongTable">
+  	<span id="coordinateTable"></span>
+  </div>
 </div>
 
-<script>
+<div id="map"></div>
+<!-- simple ass jQuery to default hide the coordinate table -->
+<script> 
     $(document).ready(function(){
     	$("#latlongTable").hide();
     	$("#submit").click(function(e) {
@@ -87,6 +100,23 @@
     		populateTable();
     	});
     });
+</script>
+
+<!-- initialize the map, have it at the bottom to initialize last since resource heavy -->
+<script type="text/javascript">
+  var map;
+  function initMap(item) {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {lat: 38.581572, lng: -121.494400},
+      zoom: 12
+    });  // for simplicity sake initialize around Sacramento 
+  }
+</script>
+
+<!-- Google API link-->
+<!-- API key: AIzaSyAR59KKsAH40d6fKIboPwDlWCL0Qon8x4M -->
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAR59KKsAH40d6fKIboPwDlWCL0Qon8x4M&callback=initMap">
 </script>
 
 </body>

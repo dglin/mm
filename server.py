@@ -4,14 +4,6 @@ from bs4 import BeautifulSoup
 import json
 app = Flask(__name__)
 
-# class itemTable(Table):
-# 	latitude = Col('Latitude')
-# 	longitude = Col('longitude')
-
-# class tableItem(object):
-# 	def __init__(self, name, description):
-# 		self.latitude = name
-# 		self.longitude = description
 
 
 def isNumerical(string):
@@ -37,6 +29,9 @@ def returnListData(listt):
 	data = []
 	for i in listt:
 		data.append(json.dumps(i))
+	print listt
+	print data
+	print "%s({data: [" % str(request.args.get('callback')) + str(','.join(listt)) + "]})"
 	return "%s({data: [" % str(request.args.get('callback')) + str(','.join(data)) + "]})"
 
 @app.route("/")
@@ -53,18 +48,13 @@ def sendCoordinates():
 		return returnData({'status' : 'failed'})
 	temp = float(latitude), float(longitude)
 	coordinateDict.append(temp)
-	for i in coordinateDict:
-		print i
 	return returnData({'status' : 'success'})
 
 @app.route("/table")
 def populateTable():
-	print "Hello"
 	tableList = []
 	for i in coordinateDict:
 		tableList.append({i[0] : i[1]})
-	print tableList
-	print returnListData(tableList)
 	return returnListData(tableList)
 
 		
